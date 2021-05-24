@@ -7,6 +7,7 @@
 
 import abc
 
+
 class StorageProvider(abc.ABC):
     SCHEME: str
 

@@ -25,7 +25,8 @@ from torchx.runtime.storage import (
 class BaseClass:
     class StorageProviderTestBase(unittest.TestCase, abc.ABC):
         @abc.abstractmethod
-        def _temppath(self) -> ContextManager[str]: ...
+        def _temppath(self) -> ContextManager[str]:
+            ...
 
         def test_provider_blob(self) -> None:
             data = bytes(range(256))
@@ -53,13 +54,16 @@ class BaseClass:
 
             self.assertEqual(out_data, data)
 
+
 class FileProviderTest(BaseClass.StorageProviderTestBase):
     def _temppath(self) -> ContextManager[str]:
         return temppath()
 
+
 @contextmanager
 def memory_temppath() -> Generator[str, None, None]:
     yield f"memory://file-{uuid.uuid4()}"
+
 
 class FSSpecProviderTest(BaseClass.StorageProviderTestBase):
     def _temppath(self) -> ContextManager[str]:

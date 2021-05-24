@@ -18,6 +18,7 @@ from torchx.runtime.storage_provider import StorageProvider
 try:
     from torchx.runtime.fsspec import _get_fsspec_provider
 except ImportError:
+
     def _get_fsspec_provider(url: str) -> Optional[StorageProvider]:
         return None
 
@@ -52,7 +53,9 @@ def get_storage_provider(url: str) -> StorageProvider:
     if not scheme in _PROVIDERS:
         if provider := _get_fsspec_provider(url):
             return provider
-        raise AssertionError(f"failed to find provider {scheme} for URL {url} - must be one of {list(_PROVIDERS.keys())}")
+        raise AssertionError(
+            f"failed to find provider {scheme} for URL {url} - must be one of {list(_PROVIDERS.keys())}"
+        )
     return _PROVIDERS[scheme]
 
 
