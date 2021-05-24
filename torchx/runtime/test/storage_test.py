@@ -8,6 +8,10 @@
 import os.path
 import tempfile
 import unittest
+import abc
+import uuid
+from typing import ContextManager, Generator
+from contextlib import contextmanager
 
 from torchx.runtime.storage import (
     upload_blob,
@@ -18,29 +22,45 @@ from torchx.runtime.storage import (
 )
 
 
-class StorageTest(unittest.TestCase):
-    def test_file_provider_blob(self) -> None:
-        data = bytes(range(256))
+class BaseClass:
+    class StorageProviderTestBase(unittest.TestCase, abc.ABC):
+        @abc.abstractmethod
+        def _temppath(self) -> ContextManager[str]: ...
 
-        with temppath() as path:
-            upload_blob(path, data)
-            out_data = download_blob(path)
+        def test_provider_blob(self) -> None:
+            data = bytes(range(256))
 
-        self.assertEqual(out_data, data)
+            with self._temppath() as path:
+                upload_blob(path, data)
+                out_data = download_blob(path)
 
-    def test_file_provider_file(self) -> None:
-        data = bytes(range(256))
+            self.assertEqual(out_data, data)
 
-        with temppath() as remote_path, tempfile.TemporaryDirectory() as tmpdir:
-            upload_path = os.path.join(tmpdir, "upload")
-            download_path = os.path.join(tmpdir, "download")
-            with open(upload_path, "wb") as f:
-                f.write(data)
+        def test_provider_file(self) -> None:
+            data = bytes(range(256))
 
-            upload_file(upload_path, remote_path)
-            download_file(remote_path, download_path)
+            with self._temppath() as remote_path, tempfile.TemporaryDirectory() as tmpdir:
+                upload_path = os.path.join(tmpdir, "upload")
+                download_path = os.path.join(tmpdir, "download")
+                with open(upload_path, "wb") as f:
+                    f.write(data)
 
-            with open(download_path, "rb") as f:
-                out_data = f.read()
+                upload_file(upload_path, remote_path)
+                download_file(remote_path, download_path)
 
-        self.assertEqual(out_data, data)
+                with open(download_path, "rb") as f:
+                    out_data = f.read()
+
+            self.assertEqual(out_data, data)
+
+class FileProviderTest(BaseClass.StorageProviderTestBase):
+    def _temppath(self) -> ContextManager[str]:
+        return temppath()
+
+@contextmanager
+def memory_temppath() -> Generator[str, None, None]:
+    yield f"memory://file-{uuid.uuid4()}"
+
+class FSSpecProviderTest(BaseClass.StorageProviderTestBase):
+    def _temppath(self) -> ContextManager[str]:
+        return memory_temppath()

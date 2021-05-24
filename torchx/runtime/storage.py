@@ -10,9 +10,16 @@ import os
 import shutil
 import tempfile
 from contextlib import contextmanager
-from typing import Dict
-from typing import Generator
+from typing import Generator, Dict, Optional
 from urllib.parse import urlparse
+
+from torchx.runtime.storage_provider import StorageProvider
+
+try:
+    from torchx.runtime.fsspec import _get_fsspec_provider
+except ImportError:
+    def _get_fsspec_provider(url: str) -> Optional[StorageProvider]:
+        return None
 
 
 def download_blob(url: str) -> bytes:
@@ -31,26 +38,6 @@ def upload_file(path: str, url: str) -> None:
     get_storage_provider(url).upload_file(path, url)
 
 
-class StorageProvider(abc.ABC):
-    SCHEME: str
-
-    @abc.abstractmethod
-    def download_blob(self, url: str) -> bytes:
-        ...
-
-    @abc.abstractmethod
-    def upload_blob(self, url: str, body: bytes) -> None:
-        ...
-
-    @abc.abstractmethod
-    def download_file(self, url: str, path: str) -> None:
-        ...
-
-    @abc.abstractmethod
-    def upload_file(self, path: str, url: str) -> None:
-        ...
-
-
 _PROVIDERS: Dict[str, StorageProvider] = {}
 
 
@@ -62,9 +49,10 @@ def register_storage_provider(provider: StorageProvider) -> None:
 def get_storage_provider(url: str) -> StorageProvider:
     parsed = urlparse(url)
     scheme = parsed.scheme
-    assert (
-        scheme in _PROVIDERS
-    ), f"failed to find provider {scheme} for URL {url} - must be one of {list(_PROVIDERS.keys())}"
+    if not scheme in _PROVIDERS:
+        if provider := _get_fsspec_provider(url):
+            return provider
+        raise AssertionError(f"failed to find provider {scheme} for URL {url} - must be one of {list(_PROVIDERS.keys())}")
     return _PROVIDERS[scheme]
 
 

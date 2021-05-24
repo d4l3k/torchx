@@ -4,3 +4,4 @@ kfp==1.4.0
 pyre-extensions>=0.0.21
 black>=21.5b1
 isort>=5.8.0
+fsspec>=2021.4.0
