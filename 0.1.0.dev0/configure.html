@@ -6,7 +6,8 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>Configuring &mdash; PyTorch/TorchX master documentation</title>
@@ -194,17 +195,10 @@
         <div class="pytorch-menu pytorch-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           <div class="pytorch-left-menu-search">
             
-
-            
-              
-              
-                <div class="version">
-                  v0.1.0.dev0
-                </div>
-              
-            
-
-            
+    <div class="version">
+      <a href='https://pytorch.org/torchx/versions.html'>v0.1.0.dev0 &#x25BC</a>
+    </div>
+    
 
 
   
@@ -218,7 +212,6 @@
   </form>
 </div>
 
-            
           </div>
 
           
@@ -340,7 +333,7 @@
             <div role="main" class="main-content" itemscope="itemscope" itemtype="http://schema.org/Article">
              <article itemprop="articleBody" id="pytorch-article" class="pytorch-article">
               
-  <div class="section" id="configuring">
+  <section id="configuring">
 <h1>Configuring<a class="headerlink" href="#configuring" title="Permalink to this headline">¶</a></h1>
 <p>TorchX defines plugin points for you to configure TorchX to best support
 your infrastructure setup. Most of the configuration is done through
@@ -359,7 +352,7 @@ file as</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<div class="section" id="registering-custom-schedulers">
+<section id="registering-custom-schedulers">
 <h2>Registering Custom Schedulers<a class="headerlink" href="#registering-custom-schedulers" title="Permalink to this headline">¶</a></h2>
 <p>You may implement a custom scheduler by implementing the
 .. py::class torchx.schedulers.Scheduler interface. Once you do you can
@@ -375,8 +368,8 @@ $sched_name = my.custom.scheduler:create_scheduler
     <span class="k">return</span> <span class="n">MyScheduler</span><span class="p">(</span><span class="n">session_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="registering-named-resources">
+</section>
+<section id="registering-named-resources">
 <h2>Registering Named Resources<a class="headerlink" href="#registering-named-resources" title="Permalink to this headline">¶</a></h2>
 <p>A Named Resource is a set of predefined resource specs that are given a
 string name. This is particularly useful
@@ -394,8 +387,8 @@ enumerate t-shirt sized resource specs for the containers as:</p>
 </div>
 <p>And refer to the resources by their string names.</p>
 <p>&lt;COMING SOON&gt;</p>
-</div>
-<div class="section" id="registering-custom-components">
+</section>
+<section id="registering-custom-components">
 <h2>Registering Custom Components<a class="headerlink" href="#registering-custom-components" title="Permalink to this headline">¶</a></h2>
 <p>It is possible to author and register a custom set of components with the
 <code class="docutils literal notranslate"><span class="pre">torchx</span></code> CLI as builtins to the CLI. This makes it possible to customize
@@ -406,8 +399,8 @@ when they run</p>
 </pre></div>
 </div>
 <p>&lt;COMING SOON&gt;</p>
-</div>
-</div>
+</section>
+</section>
 
 
              </article>
