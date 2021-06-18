@@ -5,7 +5,10 @@
 # LICENSE file in the root directory of this source tree.
 
 import unittest
-from importlib.metadata import EntryPoint
+try:
+    from importlib.metadata import EntryPoint
+except ImportError:
+    from importlib_metadata import EntryPoint
 from typing import Dict
 from unittest.mock import MagicMock, patch
 
